@@ -8,10 +8,12 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/api');
 
 var app = express();
-const models = require("./routes/db");
+// const models = require("./routes/db");
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.engine("html",require("ejs").__express);
+// app.set('view engine', 'ejs');
+app.set('view engine', 'html');
 
 app.use(logger('dev'));
 app.use(express.json());
