@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const User = require('../mongodb/user');
 
 // 统一返回格式
 var responseData;
@@ -48,18 +49,30 @@ router.post('/register',function (req,res) {
       res.json(responseData);
       return;
   }
-/* 这里先省略 判断用户名是否已经注册 的步骤。需要查询数据库 */
-
-/* *************************************************** */
-
-/* 这里先省略 保存用户注册的信息到数据中 的步骤。需要查询数据库 */
-
-/* *************************************************** */
-
-
-  res.json(responseData);
-  // res.send('注册成功')
+/* 判断用户名是否已经注册 */
+  User.findOne({
+    username:username
+  },function(err,doc){
+    // console.log(err);
+    // console.log(doc);
+    if(doc){
+      responseData.code = 3;
+      responseData.message = '用户名已经被注册了';
+      res.json(responseData);
+      return;
+    }
+    var user = new User({
+      username:username,
+      password: password
+    })
+    user.save();
+    responseData.code = 4;
+    responseData.message = '注册成功';
+    res.json(responseData);
+    return;
+  })
 })
+
 router.post('/login', function(req, res) {
   // console.log(req.body);
   var username = req.body.username;
@@ -71,7 +84,22 @@ router.post('/login', function(req, res) {
     res.json(responseData);
     return
   }
+  User.findOne({
+    usernme,
+    password
+  },function(err,doc){
+    if(doc){
+      responseData.code = 4;
+      responseData.message = '登录成功';
 
-  res.send('登入成功');
+      res.json(responseData);
+      return;
+    }
+    responseData.code = 2;
+    responseData.message = '用户名和密码不存在';
+    res.json(responseData);
+    return;
+  })
+  
 });
 module.exports = router;

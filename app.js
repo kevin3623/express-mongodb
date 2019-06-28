@@ -8,7 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/api');
 
 var app = express();
-// const models = require("./routes/db");
+// const models = require("./mongodb/test"); // 测试操作数据库
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.engine("html",require("ejs").__express);
