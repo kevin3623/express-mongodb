@@ -1,6 +1,16 @@
 var express = require('express');
 var router = express.Router();
 const User = require('../mongodb/user');
+var session = require('express-session');
+var app = express();
+// session
+app.use(session({
+  name: 'userInfo', // 这里是cookie的name，默认是connect.sid
+  secret: 'my_session_secret', // 建议使用 128 个字符的随机字符串
+  resave: true,
+  saveUninitialized: false,
+  cookie: { maxAge: 60 * 1000, httpOnly: true }
+}));
 
 // 统一返回格式
 var responseData;
@@ -22,7 +32,6 @@ router.get('/', function(req, res, next) {
 // 注册逻辑
 // 数据验证
 router.post('/register',function (req,res) {
-  console.log(req.body);
   var username = req.body.username;
   var password = req.body.password;
   var repassword = req.body.repassword;
@@ -74,9 +83,10 @@ router.post('/register',function (req,res) {
 })
 
 router.post('/login', function(req, res) {
-  // console.log(req.body);
   var username = req.body.username;
   var password = req.body.password;
+  // console.log(req.cookies.userInfo);
+  console.log('dd',req.session);
   
   if(password == ''|| username==''){
     responseData.code = 2;
@@ -85,13 +95,26 @@ router.post('/login', function(req, res) {
     return
   }
   User.findOne({
-    usernme,
+    username,
     password
   },function(err,doc){
+    
     if(doc){
       responseData.code = 4;
       responseData.message = '登录成功';
+      responseData.userInfo = {
+        id: doc.id,
+        username: doc.username
+      };
 
+      res.cookie(
+        'userInfo',
+        JSON.stringify({
+          id: doc.id,
+          username: doc.username
+        })
+      );
+      // req.session.username=doc.username;
       res.json(responseData);
       return;
     }

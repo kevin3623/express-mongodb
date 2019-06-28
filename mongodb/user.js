@@ -11,6 +11,8 @@ const UserSchema = new Schema({
     // 密码
     password:String
 
+},{
+    versionKey: false // 去掉 mongoose 创建数据库默认生成  版本号 这个字段
 })
 
 // 生成Model
