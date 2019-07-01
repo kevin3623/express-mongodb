@@ -1,16 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const User = require('../mongodb/user');
-var session = require('express-session');
-var app = express();
-// session
-app.use(session({
-  name: 'userInfo', // 这里是cookie的name，默认是connect.sid
-  secret: 'my_session_secret', // 建议使用 128 个字符的随机字符串
-  resave: true,
-  saveUninitialized: false,
-  cookie: { maxAge: 60 * 1000, httpOnly: true }
-}));
+
 
 // 统一返回格式
 var responseData;
