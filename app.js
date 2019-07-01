@@ -22,11 +22,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // session
 app.use(session({
-  name: 'userInfo', // 这里是cookie的name，默认是connect.sid
+  name: 'test_session', // 这里是cookie的name，默认是connect.sid
   secret: 'my_session_secret', // 建议使用 128 个字符的随机字符串
   resave: true,
   saveUninitialized: false,
-  cookie: { maxAge: 60 * 1000, httpOnly: true }
+  cookie: { maxAge: 1000 * 60 * 60 * 2, httpOnly: true }
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 

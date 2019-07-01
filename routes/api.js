@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 const User = require('../mongodb/user');
 
-
 // 统一返回格式
 var responseData;
 router.use( function (req,res,next) {
@@ -76,7 +75,7 @@ router.post('/register',function (req,res) {
 router.post('/login', function(req, res) {
   var username = req.body.username;
   var password = req.body.password;
-  // console.log(req.cookies.userInfo);
+  
   console.log('dd',req.session);
   
   if(password == ''|| username==''){
@@ -85,7 +84,7 @@ router.post('/login', function(req, res) {
     res.json(responseData);
     return
   }
-  User.findOne({
+  User.findOne({  // 查询数据库中是否有这个用户
     username,
     password
   },function(err,doc){
@@ -98,14 +97,6 @@ router.post('/login', function(req, res) {
         username: doc.username
       };
 
-      res.cookie(
-        'userInfo',
-        JSON.stringify({
-          id: doc.id,
-          username: doc.username
-        })
-      );
-      // req.session.username=doc.username;
       res.json(responseData);
       return;
     }
